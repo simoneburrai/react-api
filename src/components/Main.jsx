@@ -6,12 +6,13 @@ import Card from "./Card";
 const urlActress = "https://www.freetestapi.com/api/v1/actresses"
 const urlActors = "https://www.freetestapi.com/api/v1/actors"
 
-
 const Main = () => {
     const [actressList, setActressList] = useState([]);
     const [actorsList, setActorsList] = useState([]);
-
+    const [allActors, setAllActors] = useState([]);
+    const [clickButton, setClickButton] = useState(false);
     function ApiCallActresses() {
+
         axios.get(urlActress)
             .then(response => {
                 setActressList(response.data);
@@ -34,8 +35,46 @@ const Main = () => {
 
 
 
+    const generateAllActors = () => {
+        const actorsIdChanged = actorsList.map(actor => {
+            actor.id = actor.id + actressList.length;
+            return actor;
+        })
+        console.log(actorsIdChanged);
+        setAllActors([...actressList, ...actorsIdChanged]);
+        setClickButton(true);
+    }
+
+    console.log(allActors)
+
     return <main>
-        <div className="card-container">
+        <button onClick={generateAllActors}>View all Actors</button>
+        {clickButton && <div className="card-container">
+            <h2>Actors and Actresses</h2>
+            {allActors.map(actor => {
+                return <Card key={actor.id}>
+                    <div className="info-container">
+                        <h2 className="name">{actor.name}</h2>
+                        <div className="year"><span>Birth Year:</span> {actor.birth_year}</div>
+                        <div className="nationality"><span>Nationality:</span>{actor.nationality}</div>
+                        <div className="biography">
+                            <h3>Biography:</h3>
+                            <p>{actor.biography}</p>
+                        </div>
+                        <div className="awards">
+                            <h4>Awards</h4>
+                            <p>{actor.awards}</p>
+                        </div>
+                    </div>
+                    <div className="image-container">
+                        <img src={actor.image} alt={actor.name} className="img" />
+                    </div>
+                </Card>
+            })}
+        </div>}
+
+
+        {!clickButton && <>  <div className="card-container">
             <h2>Actresses</h2>
             {actressList.map(actress => {
                 return <Card key={actress.id}>
@@ -58,29 +97,30 @@ const Main = () => {
                 </Card>
             })}
         </div>
-        <div className="card-container">
-            <h2>Actors</h2>
-            {actorsList.map(actor => {
-                return <Card key={actor.id}>
-                    <div className="info-container">
-                        <h2 className="name">{actor.name}</h2>
-                        <div className="year"><span>Birth Year:</span> {actor.birth_year}</div>
-                        <div className="nationality"><span>Nationality:</span>{actor.nationality}</div>
-                        <div className="biography">
-                            <h3>Biography:</h3>
-                            <p>{actor.biography}</p>
+            <div className="card-container">
+                <h2>Actors</h2>
+                {actorsList.map(actor => {
+                    return <Card key={actor.id}>
+                        <div className="info-container">
+                            <h2 className="name">{actor.name}</h2>
+                            <div className="year"><span>Birth Year:</span> {actor.birth_year}</div>
+                            <div className="nationality"><span>Nationality:</span>{actor.nationality}</div>
+                            <div className="biography">
+                                <h3>Biography:</h3>
+                                <p>{actor.biography}</p>
+                            </div>
+                            <div className="awards">
+                                <h4>Awards</h4>
+                                <p>{actor.awards}</p>
+                            </div>
                         </div>
-                        <div className="awards">
-                            <h4>Awards</h4>
-                            <p>{actor.awards}</p>
+                        <div className="image-container">
+                            <img src={actor.image} alt={actor.name} className="img" />
                         </div>
-                    </div>
-                    <div className="image-container">
-                        <img src={actor.image} alt={actor.name} className="img" />
-                    </div>
-                </Card>
-            })}
-        </div>
+                    </Card>
+                })}
+            </div></>}
+
     </main>
 }
 

@@ -36,12 +36,25 @@ const Main = () => {
 
 
     const generateAllActors = () => {
+
         const actorsIdChanged = actorsList.map(actor => {
             actor.id = actor.id + actressList.length;
             return actor;
         })
         console.log(actorsIdChanged);
-        setAllActors([...actressList, ...actorsIdChanged]);
+        const allActorsMerged = [...actressList, ...actorsIdChanged];
+        allActorsMerged.sort((firstActor, secondActor) => {
+            const firstName = firstActor.name.toUpperCase();
+            const secondName = secondActor.name.toUpperCase();
+            if (firstName < secondName) {
+                return -1;
+            }
+            if (firstName > secondName) {
+                return 1;
+            }
+            return 0;
+        });
+        setAllActors(allActorsMerged)
         setClickButton(true);
     }
 

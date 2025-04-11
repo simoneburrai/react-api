@@ -31,7 +31,7 @@ const Main = () => {
                         <div className="year"><span>Birth Year:</span> {actress.birth_year}</div>
                         <div className="nationality"><span>Nationality:</span>{actress.nationality}</div>
                         <div className="biography">
-                            <h3>Biography</h3>
+                            <h3>Biography:</h3>
                             <p>{actress.biography}</p>
                         </div>
                         <div className="awards">

@@ -31,6 +31,14 @@ main {
     gap: 20px;
 }
 
+.card-container>h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    color: blueviolet;
+    padding: 30px;
+}
+
 .card {
     width: calc((100% - 60px) / 4);
     background-color: rgb(192, 164, 255);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const urlActress = "http://localhost:5173/api/actresses"
+const urlActress = "https://freetestapi.com/api/v1/actresses"
 
 
 const Main = () => {
@@ -20,7 +20,10 @@ const Main = () => {
 
     useEffect(ApiCall, []);
 
-    return <main>Sono il Main</main>
+    return <main>
+        <div className="card-container">
+        </div>
+    </main>
 }
 
 export default Main;

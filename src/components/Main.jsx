@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Card from "./Card";
+
 
 const urlActress = "https://www.freetestapi.com/api/v1/actresses"
 
@@ -23,7 +25,7 @@ const Main = () => {
     return <main>
         <div className="card-container">
             {actressList.map(actress => {
-                return <div key={actress.id} className="actress">
+                return <Card key={actress.id} className="actress">
                     <h2 className="name">Name: {actress.name}</h2>
                     <div className="year">Birth Year:{actress.birth_year}</div>
                     <div className="nationality">Nationality: {actress.nationality}</div>
@@ -31,8 +33,12 @@ const Main = () => {
                         <h3>Biography</h3>
                         <p>{actress.biography}</p>
                     </div>
+                    <div className="awards">
+                        <h4>Awards</h4>
+                        <p>{actress.awards}</p>
+                    </div>
                     <img src={actress.image} alt={actress.name} className="img" />
-                </div>
+                </Card>
             })}
         </div>
     </main>

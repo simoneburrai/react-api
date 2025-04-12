@@ -26,6 +26,7 @@ const Main = () => {
 
 
     const onSubmitResearch = (e) => {
+        console.log("The searched Value is", searchValue)
         const isActressChecked = e.target.elements.actresses.checked;
         const isActorChecked = e.target.elements.actors.checked;
         e.preventDefault();
@@ -44,10 +45,10 @@ const Main = () => {
     }
 
     function ApiCallActresses(url) {
-
+        console.log("Url chiamato", url)
         axios.get(url)
             .then(response => {
-                setActressList(response.data);
+                setActressList(response.data)
             })
             .catch(error => console.log(error.message));
 
@@ -97,7 +98,7 @@ const Main = () => {
         {!clickButton && <div className="controls">
             <button onClick={generateAllActors}>View all Actors</button>
             <form onSubmit={onSubmitResearch}>
-                <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                <input type="text" placeholder="Search for Name" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                 <label>Actresses</label>
                 <input type="checkbox" name="actresses" />
                 <label>Actors</label>

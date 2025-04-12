@@ -1,27 +1,60 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "./Card";
+import ApiUrl from "../data/ApiUrl";
 
 
-const urlActress = "https://www.freetestapi.com/api/v1/actresses"
-const urlActors = "https://www.freetestapi.com/api/v1/actors"
+
+
 
 const Main = () => {
+
+    // Array of Actors 
     const [actressList, setActressList] = useState([]);
     const [actorsList, setActorsList] = useState([]);
     const [allActors, setAllActors] = useState([]);
-    const [clickButton, setClickButton] = useState(false);
-    function ApiCallActresses() {
 
-        axios.get(urlActress)
+    // View All Actors Button 
+    const [clickButton, setClickButton] = useState(false);
+
+    // Urls and Searching Options 
+    const [urlActress, setUrlActress] = useState(ApiUrl.urlActress);
+    const [urlActors, setUrlActors] = useState(ApiUrl.urlActors);
+    const [searchValue, setSearchValue] = useState("");
+    const searchActor = ApiUrl.searchActors;
+    const searchActress = ApiUrl.searchActress;
+
+
+    const onSubmitResearch = (e) => {
+        const isActressChecked = e.target.elements.actresses.checked;
+        const isActorChecked = e.target.elements.actors.checked;
+        e.preventDefault();
+        if (isActressChecked && searchValue !== "") {
+            const newUrl = `${searchActress}${searchValue}`
+            setUrlActress(newUrl);
+        } else {
+            setUrlActress(ApiUrl.urlActress)
+        }
+        if (isActorChecked && searchValue !== "") {
+            const newUrl = `${searchActor}${searchValue}`
+            setUrlActors(newUrl);
+        } else {
+            setUrlActors(ApiUrl.urlActors)
+        }
+    }
+
+    function ApiCallActresses(url) {
+
+        axios.get(url)
             .then(response => {
                 setActressList(response.data);
             })
             .catch(error => console.log(error.message));
+
     }
 
-    function ApiCallActors() {
-        axios.get(urlActors)
+    function ApiCallActors(url) {
+        axios.get(url)
             .then(response => {
                 setActorsList(response.data);
             })
@@ -29,9 +62,9 @@ const Main = () => {
     }
 
     useEffect(() => {
-        ApiCallActresses()
-        ApiCallActors()
-    }, []);
+        ApiCallActresses(urlActress)
+        ApiCallActors(urlActors)
+    }, [urlActress, urlActors]);
 
 
 
@@ -61,27 +94,21 @@ const Main = () => {
     console.log(allActors)
 
     return <main>
-        <button onClick={generateAllActors}>View all Actors</button>
-        {clickButton && <div className="card-container">
+        {!clickButton && <div className="controls">
+            <button onClick={generateAllActors}>View all Actors</button>
+            <form onSubmit={onSubmitResearch}>
+                <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                <label>Actresses</label>
+                <input type="checkbox" name="actresses" />
+                <label>Actors</label>
+                <input type="checkbox" name="actors" />
+                <button type="submit">Submit</button>
+            </form>
+        </div>}
+        {clickButton && <div id="all-actors" className="card-container">
             <h2>Actors and Actresses</h2>
             {allActors.map(actor => {
-                return <Card key={actor.id}>
-                    <div className="info-container">
-                        <h2 className="name">{actor.name}</h2>
-                        <div className="year"><span>Birth Year:</span> {actor.birth_year}</div>
-                        <div className="nationality"><span>Nationality:</span>{actor.nationality}</div>
-                        <div className="biography">
-                            <h3>Biography:</h3>
-                            <p>{actor.biography}</p>
-                        </div>
-                        <div className="awards">
-                            <h4>Awards</h4>
-                            <p>{actor.awards}</p>
-                        </div>
-                    </div>
-                    <div className="image-container">
-                        <img src={actor.image} alt={actor.name} className="img" />
-                    </div>
+                return <Card key={actor.id} person={actor}>
                 </Card>
             })}
         </div>}
@@ -90,46 +117,14 @@ const Main = () => {
         {!clickButton && <>  <div className="card-container">
             <h2>Actresses</h2>
             {actressList.map(actress => {
-                return <Card key={actress.id}>
-                    <div className="info-container">
-                        <h2 className="name">{actress.name}</h2>
-                        <div className="year"><span>Birth Year:</span> {actress.birth_year}</div>
-                        <div className="nationality"><span>Nationality:</span>{actress.nationality}</div>
-                        <div className="biography">
-                            <h3>Biography:</h3>
-                            <p>{actress.biography}</p>
-                        </div>
-                        <div className="awards">
-                            <h4>Awards</h4>
-                            <p>{actress.awards}</p>
-                        </div>
-                    </div>
-                    <div className="image-container">
-                        <img src={actress.image} alt={actress.name} className="img" />
-                    </div>
+                return <Card key={actress.id} person={actress}>
                 </Card>
             })}
         </div>
-            <div className="card-container">
+            <div className="card-container actors">
                 <h2>Actors</h2>
                 {actorsList.map(actor => {
-                    return <Card key={actor.id}>
-                        <div className="info-container">
-                            <h2 className="name">{actor.name}</h2>
-                            <div className="year"><span>Birth Year:</span> {actor.birth_year}</div>
-                            <div className="nationality"><span>Nationality:</span>{actor.nationality}</div>
-                            <div className="biography">
-                                <h3>Biography:</h3>
-                                <p>{actor.biography}</p>
-                            </div>
-                            <div className="awards">
-                                <h4>Awards</h4>
-                                <p>{actor.awards}</p>
-                            </div>
-                        </div>
-                        <div className="image-container">
-                            <img src={actor.image} alt={actor.name} className="img" />
-                        </div>
+                    return <Card key={actor.id} person={actor}>
                     </Card>
                 })}
             </div></>}
